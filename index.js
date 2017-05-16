@@ -27,7 +27,6 @@ module.exports.token = token
 var auth = require('basic-auth')
 var debug = require('debug')('morgan')
 var deprecate = require('depd')('morgan')
-var onFinished = require('on-finished')
 var onHeaders = require('on-headers')
 
 /**
@@ -138,7 +137,8 @@ function morgan (format, options) {
       onHeaders(res, recordStartTime)
 
       // log when response finished
-      onFinished(res, logRequest)
+      res.on('finish', logRequest)
+      res.on('close', logRequest)
     }
 
     next()
